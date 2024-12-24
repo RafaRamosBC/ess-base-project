@@ -17,4 +17,4 @@ Feature: Criar Notícias
         não será permitido", o "subtítulo" com "Exemplo de título muito longo", o "corpo da notícia" com "Texto válido"
         And Eu clico em "Publicar"
         Then uma mensagem "O título não pode exceder 100 caracteres" é exibida
-        And a notícia não é publicada.
+        And a notícia não é publicadaaaaaaaaa.
