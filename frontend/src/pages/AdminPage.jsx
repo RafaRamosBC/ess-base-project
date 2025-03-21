@@ -206,6 +206,41 @@ const AdminPage = () => {
     return true
   }
 
+    // Validate news form
+    const validateNewsForm = () => {
+      if (!newsForm.title) {
+        showAlert("error", "Título da notícia é obrigatório")
+        return false
+      }
+
+      if (!newsForm.subtitle) {
+        showAlert("error", "Subtítulo da notícia é obrigatório")
+        return false
+      }
+
+      if (!newsForm.body) {
+        showAlert("error", "Corpo da notícia é obrigatório")
+        return false
+      }
+  
+      if (newsForm.title.length > 50) {
+        showAlert("error", "Título deve conter no máximo 50 caracteres")
+        return false
+      }
+  
+      if (newsForm.subtitle.length > 100) {
+        showAlert("error", "Subtítulo deve conter no máximo 100 caracteres")
+        return false
+      }
+  
+      if (newsForm.body.length > 250) {
+        showAlert("error", "Corpo deve conter no máximo 250 caracteres")
+        return false
+      }
+  
+      return true
+    }
+
   // Handle form submission
   const handleSubmit = async (e, formType) => {
     e.preventDefault()
@@ -254,6 +289,11 @@ const AdminPage = () => {
           }
           break
         case "news":
+          // Validate news form
+          if (!validateNewsForm()) {
+            return
+          }
+
           if (editMode.news) {
             await newsApi.update(newsForm.id, newsForm)
             showAlert("success", "Notícia atualizada com sucesso!")
@@ -738,6 +778,9 @@ const AdminPage = () => {
               onChange={(e) => handleInputChange(e, "news")}
               required
             />
+            <small className="form-hint">
+              O título deve conter no máximo 50 caracteres. ({newsForm.title.length}/50)
+            </small>
           </div>
 
           <div className="form-group">
@@ -750,6 +793,9 @@ const AdminPage = () => {
               onChange={(e) => handleInputChange(e, "news")}
               required
             />
+            <small className="form-hint">
+              O subtítulo deve conter no máximo 100 caracteres. ({newsForm.subtitle.length}/100)
+            </small>
           </div>
 
           <div className="form-group">
@@ -762,6 +808,9 @@ const AdminPage = () => {
               required
               rows="6"
             ></textarea>
+            <small className="form-hint">
+              O corpo deve conter no máximo 250 caracteres. ({newsForm.body.length}/250)
+            </small>
           </div>
 
           <div className="form-row">
