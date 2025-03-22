@@ -25,7 +25,7 @@ usuarios.get('/:id', (req, res) => {
 
 // Rota para criar um usuário
 usuarios.post('/', (req, res) => {
-  const { nome, login, senha } = req.body;
+  const { nome, login, senha, role } = req.body;
 
   // Validações
   if (!login){
@@ -42,11 +42,14 @@ usuarios.post('/', (req, res) => {
   }
 
   // Cria o novo usuário
+  const favoritos = []
   const newUser = {
     id: nextUserId++,
     nome,
     login,
-    senha
+    senha,
+    favoritos,
+    role
   };
 
   users.push(newUser);

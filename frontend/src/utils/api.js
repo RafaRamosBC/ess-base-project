@@ -4,6 +4,9 @@
  */
 
 const API_BASE_URL = "http://localhost:4001"
+export const PLACEHOLDER_IMAGE = "https://via.placeholder.com/300x200?text=iLoveRU"
+export const PLACEHOLDER_NEWS =
+  "https://static.vecteezy.com/ti/vetor-gratis/p1/7241519-estilo-de-icone-de-banner-de-noticias-gratis-vetor.jpg"
 
 // Função para verificar se o backend está disponível
 export const checkBackendAvailability = async () => {
@@ -22,10 +25,6 @@ export const checkBackendAvailability = async () => {
     return false
   }
 }
-
-// Placeholder image URL
-export const PLACEHOLDER_IMAGE = "https://via.placeholder.com/300x200?text=iLoveRU"
-export const PLACEHOLDER_NEWS = "https://static.vecteezy.com/ti/vetor-gratis/p1/7241519-estilo-de-icone-de-banner-de-noticias-gratis-vetor.jpg"
 
 // Dishes API
 export const dishesApi = {
@@ -800,4 +799,6 @@ export const reportsApi = {
     }
   },
 }
+
+export { API_BASE_URL }
 

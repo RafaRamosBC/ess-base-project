@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
+import { useAuth } from "../contexts/authContext"
 import DishCard from "./DishCard"
 import NewsCard from "./NewsCard"
 import "../styles/Carousel.css"
@@ -33,6 +34,7 @@ const Carousel = ({
   const [isDragging, setIsDragging] = useState(false)
   const [startX, setStartX] = useState(0)
   const [scrollLeftState, setScrollLeftState] = useState(0)
+  const { user } = useAuth()
 
   // Check if arrows should be displayed
   useEffect(() => {
@@ -111,6 +113,9 @@ const Carousel = ({
 
   // Check if a dish is favorited
   const isFavorite = (dishId) => {
+    if (user && user.favoritos) {
+      return user.favoritos.includes(dishId)
+    }
     return favorites.includes(dishId)
   }
 

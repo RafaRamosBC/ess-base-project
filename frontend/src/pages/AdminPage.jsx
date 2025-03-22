@@ -7,8 +7,7 @@ import { dishesApi, categoriesApi, newsApi, usersApi, reportsApi } from "../util
 import "../styles/AdminPage.css"
 import "../styles/ReportsPage.css"
 
-// Adicionar a função renderReportsTab diretamente no arquivo AdminPage.jsx
-// Adicionar antes da função principal AdminPage
+// Função para renderizar a aba de relatórios
 const renderReportsTab = ({ activeTab, showAlert }) => {
   const [dashboardStats, setDashboardStats] = useState({
     totalDishes: 0,
@@ -332,27 +331,22 @@ const AdminPage = () => {
   const [formErrors, setFormErrors] = useState({})
   const [isLoading, setIsLoading] = useState(true)
   const { showAlert } = useContext(AlertContext)
-  const [dashboardStats, setDashboardStats] = useState({
-    totalDishes: 0,
-    totalCategories: 0,
-    totalUsers: 0,
-    totalNews: 0,
-    totalViews: 0,
-    averageRating: 0,
-    totalFavorites: 0,
-  })
-  const [mostViewedDishes, setMostViewedDishes] = useState([])
-  const [bestRatedDishes, setBestRatedDishes] = useState([])
-  const [categoryDistribution, setCategoryDistribution] = useState([])
-  const [ratingDistribution, setRatingDistribution] = useState([])
-  const [monthlyViews, setMonthlyViews] = useState([])
-  const [mostFavoritedDishes, setMostFavoritedDishes] = useState([])
-  const [isReportsLoading, setIsReportsLoading] = useState(false)
+  const [reportsTabRendered, setReportsTabRendered] = useState(false)
+  const [isReportsActive, setIsReportsActive] = useState(false)
 
   // Fetch data on component mount
   useEffect(() => {
     fetchData()
   }, [])
+
+  useEffect(() => {
+    setIsReportsActive(activeTab === "reports")
+    if (activeTab === "reports") {
+      setReportsTabRendered(true)
+    } else {
+      setReportsTabRendered(false)
+    }
+  }, [activeTab])
 
   // Fetch dishes, categories, news, and users from API
   const fetchData = async () => {
@@ -369,11 +363,6 @@ const AdminPage = () => {
 
       const usersData = await usersApi.getAll()
       setUsers(usersData)
-
-      // Load reports data if the active tab is 'reports'
-      if (activeTab === "reports") {
-        await loadReportsData()
-      }
     } catch (error) {
       console.error("Error fetching data:", error)
       showAlert("error", "Erro ao carregar os dados. Por favor, tente novamente mais tarde.")
@@ -382,44 +371,6 @@ const AdminPage = () => {
     }
   }
 
-  const loadReportsData = useCallback(async () => {
-    setIsReportsLoading(true)
-    try {
-      // Carregar estatísticas do dashboard
-      const stats = await reportsApi.getDashboardStats()
-      setDashboardStats(stats)
-
-      // Carregar pratos mais visualizados
-      const mostViewed = await reportsApi.getMostViewedStats()
-      setMostViewedDishes(mostViewed)
-
-      // Carregar pratos melhor avaliados
-      const bestRated = await reportsApi.getBestRatedStats()
-      setBestRatedDishes(bestRated)
-
-      // Carregar distribuição por categoria
-      const categoryDist = await reportsApi.getCategoryDistribution()
-      setCategoryDistribution(categoryDist)
-
-      // Carregar distribuição de avaliações
-      const ratingDist = await reportsApi.getRatingDistribution()
-      setRatingDistribution(ratingDist)
-
-      // Carregar visualizações mensais
-      const monthlyViewsData = await reportsApi.getMonthlyViews()
-      setMonthlyViews(monthlyViewsData)
-
-      // Carregar pratos mais favoritados
-      const mostFavoritedDishes = await reportsApi.getMostFavoritedDishes()
-      setMostFavoritedDishes(mostFavoritedDishes)
-    } catch (error) {
-      console.error("Erro ao carregar dados de relatórios:", error)
-      showAlert("error", "Erro ao carregar dados de relatórios")
-    } finally {
-      setIsReportsLoading(false)
-    }
-  }, [showAlert])
-
   // Handle tab change
   const handleTabChange = (tab) => {
     setActiveTab(tab)
@@ -427,11 +378,6 @@ const AdminPage = () => {
     setEditItemId(null)
     setFormValues({})
     setFormErrors({})
-
-    // Load reports data when the 'reports' tab is selected
-    if (tab === "reports") {
-      loadReportsData()
-    }
   }
 
   // Handle edit item
@@ -508,6 +454,7 @@ const AdminPage = () => {
         if (!values.nome) errors.nome = "Nome é obrigatório"
         if (!values.login) errors.login = "Login é obrigatório"
         if (!values.senha) errors.senha = "Senha é obrigatória"
+        if (values.senha && values.senha.length < 8) errors.senha = "A senha deve ter pelo menos 8 caracteres"
         break
       default:
         break
@@ -783,6 +730,14 @@ const AdminPage = () => {
               {formErrors.senha && <span className="form-error">{formErrors.senha}</span>}
             </div>
 
+            <div className="form-group">
+              <label htmlFor="user-role">Permissão</label>
+              <select id="user-role" name="role" value={formValues.role || "user"} onChange={handleFormChange}>
+                <option value="user">Usuário</option>
+                <option value="admin">Administrador</option>
+              </select>
+            </div>
+
             <div className="form-actions">
               <Button type="submit" text="Salvar" />
               {isEditing && <Button type="secondary" text="Cancelar" onClick={() => setIsEditing(false)} />}
@@ -939,7 +894,7 @@ const AdminPage = () => {
               <i className="fas fa-spinner fa-spin"></i>
               <span>Carregando...</span>
             </div>
-          ) : activeTab === "reports" ? (
+          ) : activeTab === "reports" && reportsTabRendered ? (
             renderReportsTab({ activeTab, showAlert })
           ) : (
             <>
