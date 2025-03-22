@@ -3,7 +3,7 @@
  * Contains all API calls to the backend server
  */
 
-const API_BASE_URL = "http://localhost:4001"
+export const API_BASE_URL = "http://localhost:4001"
 export const PLACEHOLDER_IMAGE = "https://via.placeholder.com/300x200?text=iLoveRU"
 export const PLACEHOLDER_NEWS =
   "https://static.vecteezy.com/ti/vetor-gratis/p1/7241519-estilo-de-icone-de-banner-de-noticias-gratis-vetor.jpg"
@@ -599,206 +599,88 @@ export const usersApi = {
   },
 }
 
-// Favorites API
-export const favoritesApi = {
-  // Get user favorites
-  getUserFavorites: async (userId) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/users/${userId}/favorites`)
-      return await response.json()
-    } catch (error) {
-      console.error("Error fetching user favorites:", error)
-      // Retornar dados mockados quando o backend não estiver disponível
-      return [1, 2, 5] // IDs dos pratos favoritos
-    }
-  },
+// api.js
 
-  // Add dish to favorites
-  addToFavorites: async (userId, dishId) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/users/${userId}/favorites`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ dishId }),
-      })
-      return await response.json()
-    } catch (error) {
-      console.error("Error adding to favorites:", error)
-      return { success: true, message: "Prato adicionado aos favoritos (mock)" }
-    }
-  },
-
-  // Remove dish from favorites
-  removeFromFavorites: async (userId, dishId) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/users/${userId}/favorites/${dishId}`, {
-        method: "DELETE",
-      })
-      return await response.json()
-    } catch (error) {
-      console.error("Error removing from favorites:", error)
-      return { success: true, message: "Prato removido dos favoritos (mock)" }
-    }
-  },
-
-  // Get all favorites (for admin)
-  getAllFavorites: async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/favorites`)
-      return await response.json()
-    } catch (error) {
-      console.error("Error fetching all favorites:", error)
-      // Retornar dados mockados quando o backend não estiver disponível
-      return [
-        { userId: 1, dishId: 1 },
-        { userId: 1, dishId: 2 },
-        { userId: 2, dishId: 1 },
-        { userId: 2, dishId: 3 },
-        { userId: 3, dishId: 2 },
-      ]
-    }
-  },
-}
-
-// Reports API
 export const reportsApi = {
-  // Get dashboard statistics
+  // Tudo mockado, sem chamadas ao backend
+
   getDashboardStats: async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/reports/dashboard`)
-      return await response.json()
-    } catch (error) {
-      console.error("Error fetching dashboard stats:", error)
-      // Retornar dados mockados quando o backend não estiver disponível
-      return {
-        totalDishes: 15,
-        totalCategories: 5,
-        totalUsers: 8,
-        totalNews: 4,
-        totalViews: 3250,
-        averageRating: 4.2,
-        totalFavorites: 27,
-      }
+    return {
+      totalDishes: 15,
+      totalCategories: 5,
+      totalUsers: 8,
+      totalNews: 4,
+      totalViews: 3250,
+      averageRating: 4.2,
+      totalFavorites: 27,
     }
   },
 
-  // Get most viewed dishes
-  getMostViewedStats: async (limit = 5) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/reports/most-viewed?limit=${limit}`)
-      return await response.json()
-    } catch (error) {
-      console.error("Error fetching most viewed stats:", error)
-      // Retornar dados mockados quando o backend não estiver disponível
-      return [
-        { id: 1, name: "Frango à Parmegiana", views: 1000 },
-        { id: 2, name: "Lasanha de Berinjela", views: 850 },
-        { id: 5, name: "Salmão Grelhado", views: 820 },
-        { id: 4, name: "Risoto de Cogumelos", views: 750 },
-        { id: 3, name: "Salada Caesar", views: 600 },
-      ]
-    }
+  getMostViewedStats: async () => {
+    return [
+      { id: 1, name: "Frango à Parmegiana", views: 1000 },
+      { id: 2, name: "Lasanha de Berinjela", views: 850 },
+      { id: 5, name: "Salmão Grelhado", views: 820 },
+      { id: 4, name: "Risoto de Cogumelos", views: 750 },
+      { id: 3, name: "Salada Caesar", views: 600 },
+    ]
   },
 
-  // Get best rated dishes
-  getBestRatedStats: async (limit = 5) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/reports/best-rated?limit=${limit}`)
-      return await response.json()
-    } catch (error) {
-      console.error("Error fetching best rated stats:", error)
-      // Retornar dados mockados quando o backend não estiver disponível
-      return [
-        { id: 4, name: "Risoto de Cogumelos", rating: 4.8 },
-        { id: 5, name: "Salmão Grelhado", rating: 4.7 },
-        { id: 6, name: "Ratatouille", rating: 4.6 },
-        { id: 2, name: "Lasanha de Berinjela", rating: 4.5 },
-        { id: 1, name: "Frango à Parmegiana", rating: 4.2 },
-      ]
-    }
+  getBestRatedStats: async () => {
+    return [
+      { id: 4, name: "Risoto de Cogumelos", rating: 4.8 },
+      { id: 5, name: "Salmão Grelhado", rating: 4.7 },
+      { id: 6, name: "Ratatouille", rating: 4.6 },
+      { id: 2, name: "Lasanha de Berinjela", rating: 4.5 },
+      { id: 1, name: "Frango à Parmegiana", rating: 4.2 },
+    ]
   },
 
-  // Get category distribution
   getCategoryDistribution: async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/reports/category-distribution`)
-      return await response.json()
-    } catch (error) {
-      console.error("Error fetching category distribution:", error)
-      // Retornar dados mockados quando o backend não estiver disponível
-      return [
-        { category: "Vegetariano", count: 5 },
-        { category: "Aves", count: 3 },
-        { category: "Carnes", count: 3 },
-        { category: "Peixes", count: 2 },
-        { category: "Saladas", count: 2 },
-      ]
-    }
+    return [
+      { category: "Vegetariano", count: 5 },
+      { category: "Aves", count: 3 },
+      { category: "Carnes", count: 3 },
+      { category: "Peixes", count: 2 },
+      { category: "Saladas", count: 2 },
+    ]
   },
 
-  // Get rating distribution
   getRatingDistribution: async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/reports/rating-distribution`)
-      return await response.json()
-    } catch (error) {
-      console.error("Error fetching rating distribution:", error)
-      // Retornar dados mockados quando o backend não estiver disponível
-      return [
-        { rating: 5, count: 3 },
-        { rating: 4, count: 7 },
-        { rating: 3, count: 4 },
-        { rating: 2, count: 1 },
-        { rating: 1, count: 0 },
-      ]
-    }
+    return [
+      { rating: 5, count: 3 },
+      { rating: 4, count: 7 },
+      { rating: 3, count: 4 },
+      { rating: 2, count: 1 },
+      { rating: 1, count: 0 },
+    ]
   },
 
-  // Get monthly views
   getMonthlyViews: async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/reports/monthly-views`)
-      return await response.json()
-    } catch (error) {
-      console.error("Error fetching monthly views:", error)
-      // Retornar dados mockados quando o backend não estiver disponível
-      return [
-        { month: "Jan", views: 250 },
-        { month: "Fev", views: 320 },
-        { month: "Mar", views: 410 },
-        { month: "Abr", views: 380 },
-        { month: "Mai", views: 450 },
-        { month: "Jun", views: 520 },
-        { month: "Jul", views: 480 },
-        { month: "Ago", views: 600 },
-        { month: "Set", views: 550 },
-        { month: "Out", views: 700 },
-        { month: "Nov", views: 680 },
-        { month: "Dez", views: 750 },
-      ]
-    }
+    return [
+      { month: "Jan", views: 250 },
+      { month: "Fev", views: 320 },
+      { month: "Mar", views: 410 },
+      { month: "Abr", views: 380 },
+      { month: "Mai", views: 450 },
+      { month: "Jun", views: 520 },
+      { month: "Jul", views: 480 },
+      { month: "Ago", views: 600 },
+      { month: "Set", views: 550 },
+      { month: "Out", views: 700 },
+      { month: "Nov", views: 680 },
+      { month: "Dez", views: 750 },
+    ]
   },
 
-  // Get most favorited dishes
-  getMostFavoritedDishes: async (limit = 5) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/reports/most-favorited?limit=${limit}`)
-      return await response.json()
-    } catch (error) {
-      console.error("Error fetching most favorited dishes:", error)
-      // Retornar dados mockados quando o backend não estiver disponível
-      return [
-        { id: 2, name: "Lasanha de Berinjela", favorites: 8 },
-        { id: 1, name: "Frango à Parmegiana", favorites: 7 },
-        { id: 5, name: "Salmão Grelhado", favorites: 5 },
-        { id: 4, name: "Risoto de Cogumelos", favorites: 4 },
-        { id: 3, name: "Salada Caesar", favorites: 3 },
-      ]
-    }
-  },
+  getMostFavoritedDishes: async () => {
+    return [
+      { id: 2, name: "Lasanha de Berinjela", favorites: 8 },
+      { id: 1, name: "Frango à Parmegiana", favorites: 7 },
+      { id: 5, name: "Salmão Grelhado", favorites: 5 },
+      { id: 4, name: "Risoto de Cogumelos", favorites: 4 },
+      { id: 3, name: "Salada Caesar", favorites: 3 },
+    ]
+  }
 }
-
-export { API_BASE_URL }
 
