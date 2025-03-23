@@ -218,6 +218,17 @@ When('o usuário reorganiza a lista para a seguinte ordem:', async function (dat
     this.newOrderIds = newOrderIds; // Armazena a ordem dos IDs dos pratos
 });
 
+When('a lista de favoritos fica vazia', function () {
+    // Encontra o usuário pelo userId
+    const user = users.find(u => u.id === userId);
+    if (!user) {
+        throw new Error(`Usuário com ID ${userId} não encontrado.`);
+    }
+
+    // Limpa a lista de favoritos do usuário
+    user.favoritos = [];
+});
+
 // Passos de Then (Verificações)
 Then('o sistema exibe o ícone {string} no prato', function (icon) {
     expect(response.status).to.equal(200); // Status deve ser 200 (sucesso)
@@ -290,17 +301,6 @@ Then('o sistema não permite a duplicação', function () {
 });
 
 Then('o sistema remove todos os pratos da lista de favoritos', function () {
-    // Encontra o usuário pelo userId
-    const user = users.find(u => u.id === userId);
-    if (!user) {
-        throw new Error(`Usuário com ID ${userId} não encontrado.`);
-    }
-
-    // Verifica se a lista de favoritos está vazia
-    expect(user.favoritos).to.be.empty;
-});
-
-Then('a lista de favoritos fica vazia', function () {
     // Encontra o usuário pelo userId
     const user = users.find(u => u.id === userId);
     if (!user) {
