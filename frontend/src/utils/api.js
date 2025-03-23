@@ -3,7 +3,10 @@
  * Contains all API calls to the backend server
  */
 
-const API_BASE_URL = "http://localhost:4001"
+export const API_BASE_URL = "http://localhost:4001"
+export const PLACEHOLDER_IMAGE = "https://via.placeholder.com/300x200?text=iLoveRU"
+export const PLACEHOLDER_NEWS =
+  "https://static.vecteezy.com/ti/vetor-gratis/p1/7241519-estilo-de-icone-de-banner-de-noticias-gratis-vetor.jpg"
 
 // Função para verificar se o backend está disponível
 export const checkBackendAvailability = async () => {
@@ -22,10 +25,6 @@ export const checkBackendAvailability = async () => {
     return false
   }
 }
-
-// Placeholder image URL
-export const PLACEHOLDER_IMAGE = "https://via.placeholder.com/300x200?text=iLoveRU"
-export const PLACEHOLDER_NEWS = "https://static.vecteezy.com/ti/vetor-gratis/p1/7241519-estilo-de-icone-de-banner-de-noticias-gratis-vetor.jpg"
 
 // Dishes API
 export const dishesApi = {
@@ -85,10 +84,17 @@ export const dishesApi = {
         },
         body: JSON.stringify(dish),
       })
-      return await response.json()
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        return { error: data.error || "Erro ao criar prato" }
+      }
+
+      return data
     } catch (error) {
       console.error("Error creating dish:", error)
-      return { error: "Failed to create dish (mocked)" }
+      return { error: "Falha na conexão com o servidor" }
     }
   },
 
@@ -102,10 +108,16 @@ export const dishesApi = {
         },
         body: JSON.stringify(dish),
       })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        return { error: errorData.error || `Erro ao atualizar prato ${id}` }
+      }
+
       return await response.json()
     } catch (error) {
       console.error(`Error updating dish ${id}:`, error)
-      return { error: `Failed to update dish ${id} (mocked)` }
+      return { error: "Falha na conexão com o servidor" }
     }
   },
 
@@ -115,10 +127,19 @@ export const dishesApi = {
       const response = await fetch(`${API_BASE_URL}/dishes/${id}`, {
         method: "DELETE",
       })
-      return await response.json()
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          return { error: "Prato não encontrado" }
+        }
+        const errorData = await response.json()
+        return { error: errorData.error || `Erro ao excluir prato ${id}` }
+      }
+
+      return { success: true }
     } catch (error) {
       console.error(`Error deleting dish ${id}:`, error)
-      return { error: `Failed to delete dish ${id} (mocked)` }
+      return { error: "Falha na conexão com o servidor" }
     }
   },
 
@@ -576,5 +597,90 @@ export const usersApi = {
       return { error: `Failed to delete user ${id} (mocked)` }
     }
   },
+}
+
+// api.js
+
+export const reportsApi = {
+  // Tudo mockado, sem chamadas ao backend
+
+  getDashboardStats: async () => {
+    return {
+      totalDishes: 15,
+      totalCategories: 5,
+      totalUsers: 8,
+      totalNews: 4,
+      totalViews: 3250,
+      averageRating: 4.2,
+      totalFavorites: 27,
+    }
+  },
+
+  getMostViewedStats: async () => {
+    return [
+      { id: 1, name: "Frango à Parmegiana", views: 1000 },
+      { id: 2, name: "Lasanha de Berinjela", views: 850 },
+      { id: 5, name: "Salmão Grelhado", views: 820 },
+      { id: 4, name: "Risoto de Cogumelos", views: 750 },
+      { id: 3, name: "Salada Caesar", views: 600 },
+    ]
+  },
+
+  getBestRatedStats: async () => {
+    return [
+      { id: 4, name: "Risoto de Cogumelos", rating: 4.8 },
+      { id: 5, name: "Salmão Grelhado", rating: 4.7 },
+      { id: 6, name: "Ratatouille", rating: 4.6 },
+      { id: 2, name: "Lasanha de Berinjela", rating: 4.5 },
+      { id: 1, name: "Frango à Parmegiana", rating: 4.2 },
+    ]
+  },
+
+  getCategoryDistribution: async () => {
+    return [
+      { category: "Vegetariano", count: 5 },
+      { category: "Aves", count: 3 },
+      { category: "Carnes", count: 3 },
+      { category: "Peixes", count: 2 },
+      { category: "Saladas", count: 2 },
+    ]
+  },
+
+  getRatingDistribution: async () => {
+    return [
+      { rating: 5, count: 3 },
+      { rating: 4, count: 7 },
+      { rating: 3, count: 4 },
+      { rating: 2, count: 1 },
+      { rating: 1, count: 0 },
+    ]
+  },
+
+  getMonthlyViews: async () => {
+    return [
+      { month: "Jan", views: 250 },
+      { month: "Fev", views: 320 },
+      { month: "Mar", views: 410 },
+      { month: "Abr", views: 380 },
+      { month: "Mai", views: 450 },
+      { month: "Jun", views: 520 },
+      { month: "Jul", views: 480 },
+      { month: "Ago", views: 600 },
+      { month: "Set", views: 550 },
+      { month: "Out", views: 700 },
+      { month: "Nov", views: 680 },
+      { month: "Dez", views: 750 },
+    ]
+  },
+
+  getMostFavoritedDishes: async () => {
+    return [
+      { id: 2, name: "Lasanha de Berinjela", favorites: 8 },
+      { id: 1, name: "Frango à Parmegiana", favorites: 7 },
+      { id: 5, name: "Salmão Grelhado", favorites: 5 },
+      { id: 4, name: "Risoto de Cogumelos", favorites: 4 },
+      { id: 3, name: "Salada Caesar", favorites: 3 },
+    ]
+  }
 }
 

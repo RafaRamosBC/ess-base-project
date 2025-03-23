@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Link, useLocation } from "react-router-dom"
+import { useAuth } from "../contexts/authContext"
 import SearchBar from "./SearchBar"
 import "../styles/Header.css"
 
@@ -12,6 +13,7 @@ import "../styles/Header.css"
 const Header = () => {
   const location = useLocation()
   const [activeLink, setActiveLink] = useState("")
+  const { user, logout, isAdmin } = useAuth()
 
   // Update active link based on current path
   useEffect(() => {
@@ -46,15 +48,29 @@ const Header = () => {
             <li className={activeLink === "favorites" ? "active" : ""}>
               <Link to="/favorites">Favorites</Link>
             </li>
-            <li className={activeLink === "admin" ? "active" : ""}>
-              <Link to="/admin">Admin</Link>
-            </li>
+            {isAdmin() && (
+              <li className={activeLink === "admin" ? "active" : ""}>
+                <Link to="/admin">Admin</Link>
+              </li>
+            )}
           </ul>
         </nav>
 
-        {/* Search Bar */}
-        <div className="search-container">
-          <SearchBar />
+        {/* Search Bar and User Menu */}
+        <div className="header-right">
+          <div className="search-container">
+            <SearchBar />
+          </div>
+
+          <div className="user-menu">
+            <div className="user-info">
+              <span className="user-name">{user?.nome}</span>
+              <span className="user-role">{user?.role === "admin" ? "Administrador" : "Usuário"}</span>
+            </div>
+            <button className="logout-button" onClick={logout}>
+              <i className="fas fa-sign-out-alt"></i>
+            </button>
+          </div>
         </div>
       </div>
     </header>

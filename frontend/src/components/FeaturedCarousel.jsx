@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
+import { useAuth } from "../contexts/authContext"
 import DishCard from "./DishCard"
 import NewsCard from "./NewsCard"
 import "../styles/FeaturedCarousel.css"
@@ -20,6 +21,7 @@ const FeaturedCarousel = ({ items = [], title, description, onFavoriteToggle, fa
   const [activeIndex, setActiveIndex] = useState(0)
   const [isTransitioning, setIsTransitioning] = useState(false)
   const intervalRef = useRef(null)
+  const { user } = useAuth()
 
   // Start the automatic rotation when component mounts
   useEffect(() => {
@@ -106,6 +108,9 @@ const FeaturedCarousel = ({ items = [], title, description, onFavoriteToggle, fa
 
   // Check if a dish is favorited
   const isFavorite = (dishId) => {
+    if (user && user.favoritos) {
+      return user.favoritos.includes(dishId)
+    }
     return favorites.includes(dishId)
   }
 

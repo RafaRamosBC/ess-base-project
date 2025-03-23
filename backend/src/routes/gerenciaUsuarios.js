@@ -2,7 +2,8 @@ const express = require('express');
 const usuarios = express.Router();
 const { users } = require('../database/users_list.js');
 
-let nextUserId = 1;
+let nextUserId = users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1;
+
 
 // Função para encontrar um usuário pelo ID
 const findUserById = (id) => users.find(u => u.id === parseInt(id));
@@ -24,7 +25,7 @@ usuarios.get('/:id', (req, res) => {
 
 // Rota para criar um usuário
 usuarios.post('/', (req, res) => {
-  const { nome, login, senha } = req.body;
+  const { nome, login, senha, role } = req.body;
 
   // Validações
   if (!login){
@@ -41,11 +42,14 @@ usuarios.post('/', (req, res) => {
   }
 
   // Cria o novo usuário
+  const favoritos = []
   const newUser = {
     id: nextUserId++,
     nome,
     login,
-    senha
+    senha,
+    favoritos,
+    role
   };
 
   users.push(newUser);
