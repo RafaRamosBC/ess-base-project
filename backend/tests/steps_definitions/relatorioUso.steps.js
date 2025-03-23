@@ -91,15 +91,12 @@ Then('o status da resposta deve ser {string}', function (expectedStatus) {
     expect(response.status).to.equal(statusCode);
 });
 
-Then('o JSON da resposta deve conter:', function (expectedJson) {
-    // Converte o JSON esperado de string para objeto
-    const expected = JSON.parse(expectedJson);
+Then('o JSON da resposta deve conter:', function (expectedJson) {    
+    const expected = JSON.parse(expectedJson); // Converte o JSON esperado de string para objeto
+    
+    const received = JSON.parse(JSON.stringify(response.body)); // Converte o JSON para string e depois de volta para objeto
 
-    // Converte o JSON recebido para string e depois de volta para objeto
-    const received = JSON.parse(JSON.stringify(response.body));
-
-    // Compara os objetos normalizados
-    expect(received).to.deep.equal(expected);
+    expect(received).to.deep.equal(expected); 
 });
 
 // Then('o relatório gerado deve refletir os dados do período {string} solicitado', function (periodo) {

@@ -63,7 +63,7 @@ pratos.get('/:id', (req, res) => {
 // Rota para editar um prato
 pratos.put('/:id', (req, res) => {
   const dishId = parseInt(req.params.id);
-  const { img, name, description, category, ingredients, rating, views } = req.body;
+  const { name, description, category, ingredients, rating, views } = req.body;
 
   // Validações
   if (!name) {
@@ -91,7 +91,6 @@ pratos.put('/:id', (req, res) => {
   }
 
   // Atualiza o prato
-  dish.img = img || dish.img
   dish.name = name;
   dish.description = description || dish.description; // Mantém a descrição atual se não for fornecida
   dish.ingredients = ingredients || dish.ingredients; // Mantém os ingredientes atuais se não forem fornecidos
@@ -103,7 +102,7 @@ pratos.put('/:id', (req, res) => {
 
 // Rota para adicionar um prato
 pratos.post('/', (req, res) => {
-  const { img, name, description, category, ingredients, rating, views } = req.body;
+  const { name, description, category, ingredients, rating, views } = req.body;
   const namelength = name?.length;
   // Validações
   if (!name && !category) {
@@ -154,7 +153,6 @@ pratos.post('/', (req, res) => {
 
   // Cria o novo prato
   const newDish = {
-    img: img || '',
     id: nextDishId++,
     name,
     description: description || '',

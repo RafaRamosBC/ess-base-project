@@ -179,57 +179,49 @@ router.get("/distribuicao", verificarAdmin, (req, res) => {
 router.get("/mais-favoritados", verificarAdmin, (req, res) => {
     const { filtro, limite } = req.query;
 
-    try {
-        // Verifica se o filtro é "pratos" e se o limite foi fornecido
-        if (filtro === "pratos" && limite) {
+    if (filtro === "pratos" && limite) {
+        // Cria um mapa para contar a quantidade de favoritos por prato
+        const contadorFavoritos = {};
 
-            // Cria um mapa para contar a quantidade de favoritos por prato
-            const contadorFavoritos = {};
+        // Itera sobre a lista de usuários para contar os favoritos
+        users.forEach(user => {
+            if (!Array.isArray(user.favoritos)) {
+                user.favoritos = []; // Inicializa como array vazio se for undefined ou inválido
+            }
 
-            // Itera sobre a lista de usuários para contar os favoritos
-            users.forEach(user => {
-                // Garante que a propriedade favoritos seja um array
-                if (!Array.isArray(user.favoritos)) {
-                    user.favoritos = []; // Inicializa como array vazio se for undefined ou inválido
+            user.favoritos.forEach(pratoId => {
+                if (!contadorFavoritos[pratoId]) {
+                    contadorFavoritos[pratoId] = 0;
                 }
-
-                user.favoritos.forEach(pratoId => {
-                    if (!contadorFavoritos[pratoId]) {
-                        contadorFavoritos[pratoId] = 0;
-                    }
-                    contadorFavoritos[pratoId] += 1;
-                });
+                contadorFavoritos[pratoId] += 1; // Incrementa a contagem de favoritos
             });
+        });
 
-            // Mapeia os pratos com a quantidade de favoritos
-            const pratosComFavoritos = dishes.map(dish => ({
-                ...dish,
-                favoritos: contadorFavoritos[dish.id] || 0
-            }));
+        // Mapeia os pratos com a quantidade de favoritos
+        const pratosComFavoritos = dishes.map(dish => ({
+            ...dish,
+            favoritos: contadorFavoritos[dish.id] || 0 // Se não houver favoritos, define como 0
+        }));
 
-            // Ordena os pratos por favoritos (decrescente) e, em caso de empate, por nome (alfabético)
-            const pratosOrdenados = pratosComFavoritos
-                .sort((a, b) => {
-                    if (b.favoritos !== a.favoritos) {
-                        return b.favoritos - a.favoritos;
-                    }
-                    return a.name.localeCompare(b.name);
-                })
-                .slice(0, parseInt(limite));
+        // Ordena os pratos por favoritos (decrescente)
+        const pratosOrdenados = pratosComFavoritos
+            .sort((a, b) => {
+                if (b.favoritos !== a.favoritos) {
+                    return b.favoritos - a.favoritos;
+                }
+                return a.name.localeCompare(b.name); // Em caso de empate, ordena por nome (alfabético)
+            })
+            .slice(0, parseInt(limite));
 
-            // Formata o relatório
-            const relatorio = pratosOrdenados.map(dish => ({
-                id: dish.id,
-                name: dish.name,
-                favoritos: dish.favoritos
-            }));
+        const relatorio = pratosOrdenados.map(dish => ({
+            id: dish.id,
+            name: dish.name,
+            favoritos: dish.favoritos
+        }));
 
-            res.json(relatorio);
-        } else {
-            res.status(400).json({ error: "Filtro ou limite não fornecido corretamente." });
-        }
-    } catch (error) {
-        res.status(500).json({ error: "Erro interno ao gerar relatório." });
+        res.json(relatorio);
+    } else {
+        res.status(400).json({ error: "Filtro ou limite não fornecido corretamente." });
     }
 });
 
@@ -270,6 +262,7 @@ router.get("/estatisticas", verificarAdmin, (req, res) => {
             totalFavorites
         });
     } catch (error) {
+        console.error("Erro ao calcular estatísticas:", error);
         res.status(500).json({ error: "Erro interno ao calcular estatísticas." });
     }
 });
