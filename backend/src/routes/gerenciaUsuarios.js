@@ -4,6 +4,7 @@ const { users } = require('../database/users_list.js');
 
 let nextUserId = users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1;
 
+
 // Função para encontrar um usuário pelo ID
 const findUserById = (id) => users.find(u => u.id === parseInt(id));
 
