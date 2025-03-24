@@ -5,15 +5,6 @@ const fieldSelectors: Record<string, string> = {
   "Descrição": "#category-description"
 };
 
-Given("que estou logado como administrador", () => {
-  // Realiza o login pelo fluxo de UI utilizando o backend real
-  cy.visit("/login");
-  cy.get("#login").type("juliana.ferreira");
-  cy.get("#senha").type("jf987321");
-  cy.get(".login-button").click();
-  cy.url().should("not.include", "/login");
-});
-
 Given("que estou na página de gerenciamento de categorias", () => {
   // Navega até a página de administração e, em seguida, para a aba de categorias
   cy.get(".nav-links a").contains("Admin").click();
@@ -70,11 +61,6 @@ Given("que existe uma categoria chamada {string}", (nomeCategoria: string) => {
   cy.get(".admin-table").should("contain", nomeCategoria);
 });
 
-When("clico no botão de edição dessa categoria", () => {
-  cy.get(".admin-table tbody tr").first().within(() => {
-    cy.get(".btn-edit").click();
-  });
-});
 
 When("altero o campo {string} para {string}", (campo: string, valor: string) => {
   cy.get(fieldSelectors[campo]).clear().type(valor);
@@ -85,6 +71,14 @@ When("clico no botão de exclusão da categoria {string}", (nomeDaCategoria: str
       .contains("td", nomeDaCategoria)
       .parent()
       .find(".btn-delete")
+      .click();
+  });
+
+  When("clico no botão de edição da categoria {string}", (nomeDaCategoria: string) => {
+    cy.get(".admin-table tbody tr")
+      .contains("td", nomeDaCategoria)
+      .parent()
+      .find(".btn-edit")
       .click();
   });
   
@@ -140,4 +134,39 @@ Given("que existem várias categorias cadastradas", () => {
   });
 });
 
+Given("que existe uma categoria chamada {string} que possui pratos associados", (nomeCategoria: string) => {
+  cy.get(".admin-table tbody").then($body => {
+    if (!$body.text().includes(nomeCategoria)) {
+      cy.get("#category-name").clear().type(nomeCategoria);
+      cy.get("#category-description").clear().type("Descrição de teste");
+      cy.contains("button", "Salvar").click();
+      cy.get(".alert-success").should("be.visible");
+    }
+  });
+  cy.get(".admin-table").should("contain", nomeCategoria);
+  // Associa um prato à categoria
+  cy.get(".admin-tab").contains("Pratos").click();
+  cy.get("#name").clear().type("Prato de Teste");
+  cy.get("#description").clear().type("Descrição do prato de teste");
+  cy.get("#category").select(nomeCategoria);
+  cy.get("#ingredients").clear().type("Ingredientes de teste");
+  cy.contains("button", "Salvar").click();
+  cy.get(".alert-success").should("be.visible");
+  cy.get(".admin-tab").contains("Categorias").click();
+});
 
+Then("uma mensagem de alerta sobre pratos associados deve ser exibida", () => {
+  cy.get(".alert-error").should("be.visible").and("contain", "está vinculada a pratos");
+});
+
+Given("a categoria {string} não possui pratos cadastrados", (nomeCategoria: string) => {
+  // Acessa a aba de "Pratos" no painel de administração
+  cy.get(".admin-tab").contains("Pratos").click();
+  // Verifica que nenhuma linha da tabela de pratos exibe o nome da categoria na coluna de "Categoria"
+  cy.get(".admin-table tbody tr").each(($row) => {
+    cy.wrap($row).find("td").eq(1).should("not.contain", nomeCategoria);
+  });
+
+  // Após a verificação, volta para a aba de Categorias
+  cy.get(".admin-tab").contains("Categorias").click();
+});
