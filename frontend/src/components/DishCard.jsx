@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useAuth } from "../contexts/authContext"
 import { PLACEHOLDER_IMAGE } from "../utils/api"
 import "../styles/DishCard.css"
 
@@ -17,6 +18,16 @@ import "../styles/DishCard.css"
 const DishCard = ({ dish, onFavoriteToggle, isFavorite = false, isTrending = false }) => {
   const [favorite, setFavorite] = useState(isFavorite)
   const [imageError, setImageError] = useState(false)
+  const { user } = useAuth()
+
+  // Update favorite state when user or isFavorite changes
+  useEffect(() => {
+    if (user && user.favoritos) {
+      setFavorite(user.favoritos.includes(dish.id))
+    } else {
+      setFavorite(isFavorite)
+    }
+  }, [user, dish.id, isFavorite, user?.favoritos])
 
   // Handle favorite toggle
   const handleFavoriteClick = (e) => {

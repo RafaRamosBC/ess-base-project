@@ -1,66 +1,61 @@
+// FavoritesPage.jsx
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
+import { useAuth } from "../contexts/authContext"
+import { AlertContext } from "../App"
 import DishCard from "../components/DishCard"
 import { dishesApi } from "../utils/api"
+import { favoritesAdapter } from "../utils/authApi"
 import "../styles/FavoritesPage.css"
 
-/**
- * FavoritesPage component for iLoveRU application
- * Displays user's favorite dishes
- */
 const FavoritesPage = () => {
-  const [favorites, setFavorites] = useState([])
   const [favoriteDishes, setFavoriteDishes] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+  const { user, updateUser } = useAuth()
+  const { showAlert } = useContext(AlertContext)
 
-  // Load favorites on component mount
+  // Carrega os favoritos na montagem do componente
   useEffect(() => {
-    loadFavorites()
-  }, [])
+    if (user) {
+      loadFavorites()
+    }
+  }, [user, user?.favoritos])
 
-  // Load favorites from local storage and fetch dish details
+  // Função para carregar os favoritos via API
   const loadFavorites = async () => {
     setIsLoading(true)
     try {
-      // Load favorite IDs from local storage
-      const storedFavorites = localStorage.getItem("favorites")
-      const favoriteIds = storedFavorites ? JSON.parse(storedFavorites) : []
-      setFavorites(favoriteIds)
-
-      if (favoriteIds.length === 0) {
-        setFavoriteDishes([])
-        setIsLoading(false)
-        return
-      }
-
-      // Fetch all dishes
       const allDishes = await dishesApi.getAll()
-
-      // Filter dishes by favorite IDs
-      const favorites = allDishes.filter((dish) => favoriteIds.includes(dish.id))
+      const userFavorites = user.favoritos || []
+      const favorites = allDishes.filter((dish) => userFavorites.includes(dish.id))
       setFavoriteDishes(favorites)
     } catch (error) {
-      console.error("Error loading favorites:", error)
+      console.error("Erro ao carregar favoritos:", error)
+      showAlert("error", "Erro ao carregar favoritos. Por favor, tente novamente mais tarde.")
     } finally {
       setIsLoading(false)
     }
   }
 
-  // Toggle favorite status
-  const handleFavoriteToggle = (dishId, isFavorite) => {
-    let updatedFavorites
-
-    if (isFavorite) {
-      updatedFavorites = [...favorites, dishId]
-    } else {
-      updatedFavorites = favorites.filter((id) => id !== dishId)
-      // Also remove from displayed dishes
-      setFavoriteDishes((prevDishes) => prevDishes.filter((dish) => dish.id !== dishId))
+  // Função para alternar o status de favorito
+  const handleFavoriteToggle = async (dishId, isFavorite) => {
+    try {
+      if (isFavorite) {
+        await favoritesAdapter.addToFavorites(user.id, dishId)
+      } else {
+        await favoritesAdapter.removeFromFavorites(user.id, dishId)
+        setFavoriteDishes((prevDishes) => prevDishes.filter((dish) => dish.id !== dishId))
+      }
+      const updatedUser = JSON.parse(localStorage.getItem("user"))
+      if (updatedUser) {
+        const newUser = { ...user, favoritos: updatedUser.favoritos }
+        updateUser(newUser)
+      }
+    } catch (error) {
+      console.error("Erro ao atualizar favorito:", error)
+      showAlert("error", "Erro ao atualizar favoritos. Por favor, tente novamente mais tarde.")
     }
-
-    setFavorites(updatedFavorites)
-    localStorage.setItem("favorites", JSON.stringify(updatedFavorites))
   }
 
   return (
@@ -100,4 +95,3 @@ const FavoritesPage = () => {
 }
 
 export default FavoritesPage
-
