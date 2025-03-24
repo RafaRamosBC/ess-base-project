@@ -10,19 +10,87 @@ const expect = chai.expect;
 let response;
 
 // Passos de Given
-Given('que existem noticias populares nas categorias {string}', function (categoria) {
+Given('que existem mais de cinco noticias populares nas categorias {string}', function (categoria) {
   // Simulação de pré-condição
 });
 
-Given('que existem pratos populares na categoria {string}', function (categoria) {
+Given('que existem mais de cinco pratos populares na categoria {string}', function (categoria) {
   // Simulação de pré-condição
 });
 
-Given('que existem itens populares na categoria {string}', function (categoria) {
+Given('que existem mais de cinco itens populares na categoria {string}', function (categoria) {
   // Simulação de pré-condição
 });
 
-Given('que existem conteúdos com alta visualização e interação de todos os usuários nas categorias {string} e {string}', function (categoria1, categoria2) {
+Given('que existem mais de cinco conteúdos com alta visualização e interação de todos os usuários nas categorias {string} e {string}', function (categoria1, categoria2) {
+  // Simulação de pré-condição
+});
+
+// Passos de Given
+Given('que existem menos de cinco noticias populares nas categorias {string}', function (categoria) {
+  // Simulação de pré-condição
+});
+
+Given('que existem menos de cinco pratos populares na categoria {string}', function (categoria) {
+  // Simulação de pré-condição
+});
+
+Given('que existem menos de cinco itens populares na categoria {string}', function (categoria) {
+  // Simulação de pré-condição
+});
+
+Given('que existem menos de cinco conteúdos com alta visualização e interação de todos os usuários nas categorias {string} e {string}', function (categoria1, categoria2) {
+  // Simulação de pré-condição
+});
+
+// Passos de Given
+Given('que existem exatamente cinco noticias populares nas categorias {string}', function (categoria) {
+  // Simulação de pré-condição
+});
+
+Given('que existem exatamente cinco pratos populares na categoria {string}', function (categoria) {
+  // Simulação de pré-condição
+});
+
+Given('que existem exatamente cinco itens populares na categoria {string}', function (categoria) {
+  // Simulação de pré-condição
+});
+
+Given('que existem exatamente cinco conteúdos com alta visualização e interação de todos os usuários nas categorias {string} e {string}', function (categoria1, categoria2) {
+  // Simulação de pré-condição
+});
+
+// Passos de Given
+Given('que não existem noticias populares nas categorias {string}', function (categoria) {
+  // Simulação de pré-condição
+});
+
+Given('que não existem pratos populares na categoria {string}', function (categoria) {
+  // Simulação de pré-condição
+});
+
+Given('que não existem itens populares na categoria {string}', function (categoria) {
+  // Simulação de pré-condição
+});
+
+Given('que não existem conteúdos com alta visualização e interação de todos os usuários nas categorias {string} e {string}', function (categoria1, categoria2) {
+  // Simulação de pré-condição
+});
+
+// Passos de Given
+Given('que existe apenas uma noticia popular nas categorias {string}', function (categoria) {
+  // Simulação de pré-condição
+});
+
+Given('que existe apenas um prato popular na categoria {string}', function (categoria) {
+  // Simulação de pré-condição
+});
+
+Given('que existe apenas um iten popular na categoria {string}', function (categoria) {
+  // Simulação de pré-condição
+});
+
+Given('que existe apenas um conteúdo com alta visualização e interação de todos os usuários nas categorias {string} e {string}', function (categoria1, categoria2) {
   // Simulação de pré-condição
 });
 
@@ -59,6 +127,46 @@ Then('devo receber uma lista das noticias em alta', function () {
 });
 
 Then('devo receber os conteúdos mais populares entre todos os usuários', function () {
+  expect(response.status).to.equal(200);
+  expect(response.body).to.be.an('array').that.is.not.empty;
+});
+
+Then('devo receber uma lista dos cinco pratos em alta', function () {
+  expect(response.status).to.equal(200);
+  expect(response.body).to.be.an('array').that.is.not.empty;
+});
+
+Then('devo receber uma lista das cinco noticias em alta', function () {
+  expect(response.status).to.equal(200);
+  expect(response.body).to.be.an('array').that.is.not.empty;
+});
+
+Then('devo receber os cinco conteúdos mais populares entre todos os usuários', function () {
+  expect(response.status).to.equal(200);
+  expect(response.body).to.be.an('array').that.is.not.empty;
+});
+
+Then('devo receber um alerta da ausência de itens', function () {
+  expect(response.status).to.equal(200);
+  expect(response.body).to.be.an('array').that.is.not.empty;
+});
+
+Then('devo receber um único item da categoria', function () {
+  expect(response.status).to.equal(200);
+  expect(response.body).to.be.an('array').that.is.not.empty;
+});
+
+Then('devo receber uma lista dos pratos em alta das últimas vinte e quatro horas', function () {
+  expect(response.status).to.equal(200);
+  expect(response.body).to.be.an('array').that.is.not.empty;
+});
+
+Then('devo receber uma lista das noticias em alta das últimas vinte e quatro horas', function () {
+  expect(response.status).to.equal(200);
+  expect(response.body).to.be.an('array').that.is.not.empty;
+});
+
+Then('devo receber os conteúdos mais populares entre todos os usuários das últimas vinte e quatro horas', function () {
   expect(response.status).to.equal(200);
   expect(response.body).to.be.an('array').that.is.not.empty;
 });
