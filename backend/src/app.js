@@ -19,6 +19,7 @@ const trendingRouter= require('./routes/em_alta.js');
 const usersRouter = require('./routes/gerenciaUsuarios.js');
 const favoritesRouter = require('./routes/favoritos.js');
 const authRouter = require("./routes/auth")
+const usageReportRoutes = require('./routes/relatorioUso.js');
 
 // const usageReportRoutes = require('./routes/relatorioUso.js');
 
@@ -35,6 +36,7 @@ app.use('/trending', trendingRouter);
 app.use('/users', usersRouter);
 app.use('/favorites', favoritesRouter);
 app.use("/auth", authRouter)
+app.use("/usage-report", usageReportRoutes);
 // app.use("/usage-report", usageReportRoutes);
 
 //app.use('/reviews', reviewsRouter);

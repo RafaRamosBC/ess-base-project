@@ -47,8 +47,8 @@ usuarios.post('/', (req, res) => {
     id: nextUserId++,
     nome,
     login,
-    senha,
     favoritos,
+    senha,
     role
   };
 
