@@ -42,10 +42,12 @@ usuarios.post('/', (req, res) => {
   }
 
   // Cria o novo usuário
+  const favoritos = []
   const newUser = {
     id: nextUserId++,
     nome,
     login,
+    favoritos,
     senha,
     role
   };
