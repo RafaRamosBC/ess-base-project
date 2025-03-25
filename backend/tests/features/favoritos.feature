@@ -3,7 +3,7 @@ Feature: Favoritos
     I want adicionar, visualizar, remover e organizar pratos na minha lista de favoritos
     So that eu possa acessar rapidamente os pratos que mais gosto ou desejo consumir novamente.
 
-Scenario: Adicionar prato à lista de favoritos - GUI
+Scenario: Adicionar prato à lista de favoritos
     Given o usuário "Rafael Almeida" está autenticado no sistema  
     And o prato "Frango à Parmegiana" está listado na página "Feed"  
     And o prato "Frango à Parmegiana" não está na lista de favoritos do usuário "Rafael Almeida"
@@ -50,8 +50,8 @@ Scenario: Favoritar prato enquanto navega por categorias
 
 Scenario: Visualizar lista de favoritos vazia
     Given o usuário "Mariana Lima" está autenticado no sistema
-    And a lista de favoritos fica vazia
-    When o usuário acessa a página Meus Favoritos
+    When a lista de favoritos fica vazia
+    And o usuário acessa a página Meus Favoritos
     Then uma mensagem "Sua lista de favoritos está vazia" é exibida
 
 Scenario: Reorganizar lista de favoritos
