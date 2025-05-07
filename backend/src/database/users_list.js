@@ -12,7 +12,7 @@ let users = [
         nome: "Maria Oliveira",
         login: "maria.oliveira",
         senha: "mo654321",
-        favoritos: [ 2 ],
+        favoritos: [2, 4, 6, 8],
         role: "user"
     },
     {
@@ -20,7 +20,7 @@ let users = [
         nome: "Carlos Souza",
         login: "carlos.souza",
         senha: "cs987654",
-        favoritos: [ 2, 3 ],
+        favoritos: [2, 3],
         role: "user"
     },
     {
@@ -28,7 +28,7 @@ let users = [
         nome: "Ana Costa",
         login: "ana.costa",
         senha: "ac456789",
-        favoritos: [ 5, 6 ],
+        favoritos: [5, 6, 1, 2],
         role: "user"
     },
     {
@@ -44,7 +44,7 @@ let users = [
         nome: "Mariana Lima",
         login: "mariana.lima",
         senha: "ml321654",
-        favoritos: [],
+        favoritos: [2],
         role: "user"
     },
     {
@@ -60,7 +60,7 @@ let users = [
         nome: "Fernanda Rocha",
         login: "fernanda.rocha",
         senha: "fr456123",
-        favoritos: [],
+        favoritos: [1, 2, 3, 4, 5, 6, 7, 8],
         role: "admin"
     },
     {
